@@ -12,7 +12,8 @@ def main() -> None:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
-            "Django をインポートできません。インストールされていることを確認してください。"
+            "Django をインポートできません。"
+            "インストールされていることを確認してください。"
         ) from exc
     execute_from_command_line(sys.argv)
 
