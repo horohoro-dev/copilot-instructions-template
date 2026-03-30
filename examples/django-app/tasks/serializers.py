@@ -29,6 +29,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "description",
             "status",
             "priority",
+            "estimated_hours",
             "due_date",
             "is_overdue",
             "created_at",

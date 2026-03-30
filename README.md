@@ -36,8 +36,7 @@ copilot-instructions-template
 │   │   └── debugging/SKILL.md            # デバッグ手順
 │   │
 │   └── workflows/                        # GitHub Actions
-│       ├── ci.yml                        # ruff + pytest + カバレッジ
-│       └── copilot-review.yml            # PR 時の Copilot レビュー
+│       └── ci.yml                        # ruff + pytest + カバレッジ
 │
 ├── examples/                             # サンプルプロジェクト（実例）
 │   ├── python-pandas/                    # Python + pandas による CSV データ分析
@@ -70,7 +69,7 @@ copilot-instructions-template
 | API フレームワーク | Django REST Framework | Django サンプル用 |
 | データ分析 | pandas | Python サンプル用 |
 | CI | GitHub Actions | 自動テスト・リント |
-| PR レビュー | GitHub Copilot Code Review | 自動コードレビュー |
+| PR レビュー | GitHub Copilot Code Review | 自動コードレビュー（ブランチルールセットで設定） |
 
 ## 使い方
 
@@ -133,9 +132,20 @@ PR およびmain ブランチへの push 時に自動実行：
 3. **pytest --cov** — テスト実行 + カバレッジ計測
 4. **カバレッジレポート** — PR コメントに結果を投稿
 
-### copilot-review.yml
+### Copilot コードレビュー（ブランチルールセットで設定）
 
-PR オープン時に GitHub Copilot による自動コードレビューを実行。
+Copilot コードレビューは GitHub Actions ではなく、リポジトリのブランチルールセットで有効化する：
+
+1. Settings → Rules → Rulesets → 「New branch ruleset」
+2. 「Automatically request Copilot code review」にチェック
+
+または GitHub CLI から手動リクエスト：
+
+```bash
+gh pr edit --add-reviewer @copilot
+```
+
+> **注意:** Copilot Pro 以上のプランが必要（プレミアムリクエストを消費）。
 
 ## 参考
 
