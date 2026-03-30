@@ -72,20 +72,34 @@ class ArticleViewSet(ModelViewSet):
 - フィールドレベルバリデーション: `validate_<field>()` メソッド
 - オブジェクトレベルバリデーション: `validate()` メソッド
 - ネストされたシリアライザーには `create()` / `update()` をカスタム実装する
+- `SerializerMethodField` でカスタム算出フィールドを定義する
+- `PrimaryKeyRelatedField(source=...)` で書き込み用 FK フィールドを定義する
 
 ```python
 class ArticleReadSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
+    is_recent = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
-        fields = ["id", "title", "author", "created_at"]
+        fields = ["id", "title", "author", "is_recent", "created_at"]
+
+    def get_is_recent(self, obj: Article) -> bool:
+        from django.utils import timezone
+        return obj.created_at >= timezone.now() - timezone.timedelta(days=7)
 
 
 class ArticleWriteSerializer(serializers.ModelSerializer):
+    # 書き込み用: PK で指定、source で FK フィールドにマッピング
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        source="category",
+        write_only=True,
+    )
+
     class Meta:
         model = Article
-        fields = ["title", "body", "tags"]
+        fields = ["title", "body", "tags", "category_id"]
 
     def validate_title(self, value: str) -> str:
         if len(value) < 5:
@@ -152,4 +166,30 @@ router.register("articles", ArticleViewSet, basename="article")
 urlpatterns = [
     path("api/v1/", include(router.urls)),
 ]
+```
+
+## テスト
+- pytest-django を使用する
+- テストデータの生成には **Factory Boy** を推奨する（fixtures JSON より保守性が高い）
+- API テストでは `rest_framework.test.APIClient` または pytest の `client` フィクスチャを使用する
+- 認証が必要なテストでは `force_authenticate()` でスキップする
+
+```python
+import factory
+from factory.django import DjangoModelFactory
+
+class UserFactory(DjangoModelFactory):
+    class Meta:
+        model = User
+
+    email = factory.Sequence(lambda n: f"user{n}@example.com")
+    username = factory.Sequence(lambda n: f"user{n}")
+    password = factory.PostGenerationMethodCall("set_password", "testpass")
+
+class ArticleFactory(DjangoModelFactory):
+    class Meta:
+        model = Article
+
+    title = factory.Faker("sentence")
+    author = factory.SubFactory(UserFactory)
 ```

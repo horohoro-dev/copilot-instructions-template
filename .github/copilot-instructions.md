@@ -42,12 +42,33 @@
 - type: feat, fix, refactor, test, docs, chore, ci
 - ブランチ名: `type/short-description`（例: `feat/user-auth`）
 
+## ロギング
+- `logging.getLogger(__name__)` でモジュールごとにロガーを取得する
+- `print()` をログ代わりに使わない
+- ログメッセージにはコンテキスト情報（ID、件数等）を含める
+- 本番環境では JSON 形式の構造化ログを推奨する（structlog 等）
+- ログレベルを適切に使い分ける: `DEBUG`（開発時詳細）、`INFO`（正常動作）、`WARNING`（潜在的問題）、`ERROR`（処理失敗）
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+def process_order(order_id: str) -> None:
+    logger.info("注文処理開始", extra={"order_id": order_id})
+    # ...
+    logger.info("注文処理完了", extra={"order_id": order_id})
+```
+
 ## セキュリティ
 - API キー、トークン、パスワードをハードコードしない
 - すべての秘密情報は環境変数で管理する
 - `.env` ファイルはコミットしない
 - ユーザー入力は必ずバリデーションする
 - SQL はパラメータ化クエリまたは ORM を使用する
+- 依存パッケージの脆弱性を定期的にチェックする（`pip-audit` 等）
+- シークレット混入防止には `detect-secrets` の導入を検討する
+- GitHub Dependabot でセキュリティアップデートを自動化する
 
 ## 設計原則
 - KISS（最もシンプルな解決策を選ぶ）
