@@ -90,6 +90,16 @@ class TestTaskCreateAPI:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "due_date" in response.data
 
+    def test_create_task_with_estimated_hours(self, api_client: APIClient) -> None:
+        """見積もり時間付きでタスクを作成できることを検証する."""
+        data = {
+            "title": "見積もりタスク",
+            "estimated_hours": 3.0,
+        }
+        response = api_client.post("/api/tasks/", data, format="json")
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data["estimated_hours"] == 3.0
+
     def test_create_task_without_title_fails(self, api_client: APIClient) -> None:
         """タイトルなしでタスクを作成するとエラーになることを検証する."""
         data = {"description": "タイトルなし"}

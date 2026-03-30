@@ -84,3 +84,19 @@ class TestTaskMarkAsDone:
         future_task.mark_as_done()
         future_task.refresh_from_db()
         assert future_task.status == "done"
+
+
+@pytest.mark.django_db
+class TestTaskEstimatedHours:
+    """Task.estimated_hours フィールドのテスト."""
+
+    def test_default_estimated_hours_is_none(self, db) -> None:
+        """見積もり時間のデフォルト値が None であることを検証する."""
+        task = Task.objects.create(title="デフォルトテスト")
+        assert task.estimated_hours is None
+
+    def test_set_estimated_hours(self, db) -> None:
+        """見積もり時間を設定できることを検証する."""
+        task = Task.objects.create(title="見積もりテスト", estimated_hours=4.5)
+        task.refresh_from_db()
+        assert task.estimated_hours == pytest.approx(4.5)

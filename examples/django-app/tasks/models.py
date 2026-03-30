@@ -48,6 +48,7 @@ class Task(models.Model):
         choices=Priority.choices,
         default=Priority.MEDIUM,
     )
+    estimated_hours = models.FloatField("見積もり時間", null=True, blank=True)
     due_date = models.DateField("期限日", null=True, blank=True)
     created_at = models.DateTimeField("作成日時", auto_now_add=True)
     updated_at = models.DateTimeField("更新日時", auto_now=True)
