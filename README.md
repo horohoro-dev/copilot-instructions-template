@@ -52,7 +52,6 @@ copilot-instructions-template
 │       └── tests/                        # テストコード
 │
 ├── .claude/                              # 参考資料（Superpowers Skills 等）
-├── planning/                             # 計画書
 └── README.md
 ```
 
@@ -96,7 +95,6 @@ cp -r .github/workflows/ <your-project>/.github/
 ### 3. 不要なファイルの削除
 
 - `examples/` — サンプルプロジェクトは参考用。自プロジェクトには不要
-- `planning/` — 計画書。自プロジェクトには不要
 - `.claude/` — Claude Code 参考資料。自プロジェクトには不要
 
 ## Copilot Instructions の構成
