@@ -1,0 +1,32 @@
+[project]
+name = "django-task-api"
+version = "0.1.0"
+description = "Django タスク管理 API サンプルプロジェクト"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "django>=5.0",
+    "djangorestframework>=3.15",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.8",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "tasks"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+testpaths = ["tests"]
+pythonpath = ["."]
