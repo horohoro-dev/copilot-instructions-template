@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# 仮想環境
+.venv/
+venv/
+
+# テスト・カバレッジ
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.pytest_cache/
+
+# ruff
+.ruff_cache/
+
+# 型チェック
+.mypy_cache/
+
+# 環境変数・シークレット
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+*.sqlite3
+db.sqlite3
+staticfiles/
+media/
+
+# uv
+.python-version
+
+# プロジェクト固有
+.claude/references/
+.claude/settings.json
