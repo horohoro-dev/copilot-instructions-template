@@ -79,9 +79,7 @@ class TestTaskCreateAPI:
         response = api_client.post("/api/tasks/", data, format="json")
         assert response.status_code == status.HTTP_201_CREATED
 
-    def test_create_task_with_past_due_date_fails(
-        self, api_client: APIClient
-    ) -> None:
+    def test_create_task_with_past_due_date_fails(self, api_client: APIClient) -> None:
         """過去の期限でタスクを作成するとバリデーションエラーになることを検証する."""
         past_date = (timezone.now().date() - timedelta(days=1)).isoformat()
         data = {

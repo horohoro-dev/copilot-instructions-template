@@ -69,7 +69,5 @@ class TaskSerializer(serializers.ModelSerializer):
             return value
 
         if value < timezone.now().date():
-            raise serializers.ValidationError(
-                "期限日に過去の日付は指定できません。"
-            )
+            raise serializers.ValidationError("期限日に過去の日付は指定できません。")
         return value
