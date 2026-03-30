@@ -1,0 +1,17 @@
+# Copilot による PR 自動レビュー
+name: Copilot Code Review
+
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  copilot-review:
+    name: Copilot Review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/copilot-code-review-action@v1

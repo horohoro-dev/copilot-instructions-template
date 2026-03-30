@@ -1,0 +1,56 @@
+# CI パイプライン
+# プルリクエストおよび main ブランチへの push 時に実行
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Test (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    # マトリクス戦略で複数プロジェクトを並列実行
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - examples/python-pandas
+          - examples/django-app
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Python 3.12 セットアップ
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # uv パッケージマネージャのインストール
+      - uses: astral-sh/setup-uv@v4
+
+      # 依存関係のインストール
+      - name: uv sync
+        run: uv sync
+
+      # リンター実行
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      # フォーマットチェック
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+      # テスト + カバレッジ
+      - name: Pytest
+        run: uv run pytest --cov --cov-report=xml
+
+      # カバレッジレポートを PR コメントとして投稿
+      - name: Coverage comment
+        if: github.event_name == 'pull_request'
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-xml-coverage-path: ${{ matrix.project }}/coverage.xml
