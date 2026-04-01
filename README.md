@@ -92,11 +92,6 @@ cp -r .github/workflows/ <your-project>/.github/
 - `.github/skills/` — 必要なスキルを追加・編集
 - `.github/workflows/ci.yml` — カバレッジ閾値等をプロジェクトに合わせて調整
 
-### 3. 不要なファイルの削除
-
-- `examples/` — サンプルプロジェクトは参考用。自プロジェクトには不要
-- `.claude/` — Claude Code 参考資料。自プロジェクトには不要
-
 ## Copilot Instructions の構成
 
 ### copilot-instructions.md（全体共通）
