@@ -32,6 +32,7 @@ copilot-instructions-template
 │   │   ├── python-pandas.instructions.md     # pandas コード品質・基本イディオム
 │   │   ├── python-pandas-performance.instructions.md  # pandas パフォーマンス・大規模データ
 │   │   ├── python-openpyxl.instructions.md   # openpyxl ベストプラクティス・Excel 操作
+│   │   ├── python-comments.instructions.md   # インラインコメント規約
 │   │   ├── python-logging.instructions.md    # ロギング・構造化ログ
 │   │   ├── python-configuration.instructions.md  # 設定管理・環境変数・シークレット
 │   │   ├── python-security.instructions.md   # セキュリティ・脆弱性防止
@@ -121,6 +122,7 @@ cp -r .github/workflows/ <your-project>/.github/
 - **python.instructions.md** — コード構成・命名・型・リソース管理
 - **python-patterns.instructions.md** — テスト・パフォーマンス・アンチパターン
 - **python-async.instructions.md** — 非同期・例外設計・バッチ処理
+- **python-comments.instructions.md** — インラインコメント規約（Why not What）
 - **python-logging.instructions.md** — ロギング・構造化ログ
 - **python-configuration.instructions.md** — 設定管理・環境変数・シークレット
 - **python-security.instructions.md** — セキュリティ・脆弱性防止
