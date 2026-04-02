@@ -16,17 +16,13 @@ description: "Django モデル設計・クエリ最適化・ビュー"
 class Article(models.Model):
     title = models.CharField("タイトル", max_length=200, db_index=True)
     author = models.ForeignKey(
-        "users.User",
-        on_delete=models.CASCADE,
-        related_name="articles",
-        verbose_name="著者",
+        "users.User", on_delete=models.CASCADE, related_name="articles",
     )
-    created_at = models.DateTimeField("作成日時", auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-created_at"]
-        verbose_name = "記事"
-        verbose_name_plural = "記事"
+        verbose_name = verbose_name_plural = "記事"
 
     def __str__(self) -> str:
         return self.title
@@ -43,9 +39,6 @@ class Article(models.Model):
 - DB レベル操作: `F()` 式、`Q()` オブジェクト
 
 ```python
-from django.db.models import Count, Avg, F, Q
-
-# カスタムマネージャーで共通クエリを定義
 class ArticleManager(models.Manager):
     def published(self) -> QuerySet["Article"]:
         return self.filter(status="published").select_related("author")
@@ -53,21 +46,15 @@ class ArticleManager(models.Manager):
     def with_related(self) -> QuerySet["Article"]:
         return self.select_related("author").prefetch_related("tags", "comments")
 
-# 集約・アノテーション
-Category.objects.annotate(article_count=Count("articles")).filter(article_count__gt=0)
-Product.objects.update(price=F("price") * 1.1)  # DB レベルで一括更新
+# 集約: annotate / aggregate / F() / Q()
+Category.objects.annotate(count=Count("articles")).filter(count__gt=0)
 ```
 
-### 一括操作（大量データ処理）
+### 一括操作
 
 ```python
-# bulk_create: batch_size を指定して分割挿入
 Article.objects.bulk_create(articles, batch_size=1000)
-
-# bulk_update: 更新フィールドを明示
-Article.objects.bulk_update(articles, ["status", "updated_at"], batch_size=1000)
-
-# QuerySet.update(): 条件一括更新（最速）
+Article.objects.bulk_update(articles, ["status"], batch_size=1000)
 Article.objects.filter(status="draft").update(status="archived")
 ```
 
@@ -90,3 +77,27 @@ class ArticleViewSet(ModelViewSet):
             return ArticleWriteSerializer
         return ArticleReadSerializer
 ```
+
+## Signals
+
+- シグナルはビジネスロジックに使わない（副作用の追跡が困難になる）
+- 使用を限定する: 監査ログ、キャッシュ無効化、外部システム通知
+- シグナルハンドラは軽量に保つ（重い処理は Celery タスクに委譲）
+
+```python
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=Article)
+def invalidate_article_cache(sender, instance, **kwargs) -> None:
+    """記事更新時にキャッシュを無効化する。"""
+    cache.delete(f"article:{instance.id}")
+```
+
+### Signals のアンチパターン
+
+| 禁止 | 代替 |
+|------|------|
+| シグナルでビジネスロジック実行 | サービス層のメソッドで明示的に呼ぶ |
+| シグナル内で DB 書き込み（循環リスク） | `transaction.on_commit()` で遅延実行 |
+| シグナルの過剰使用 | 明示的なメソッド呼び出しを優先 |

@@ -23,35 +23,49 @@ Claude Code の [Superpowers](https://github.com/jamiecurnow/superpowers) プラ
 copilot-instructions-template
 │
 ├── .github/
-│   ├── copilot-instructions.md           # 全体共通ルール
+│   ├── copilot-instructions.md               # 全体共通ルール
 │   │
-│   ├── instructions/                     # 言語・フレームワーク別ルール
-│   │   ├── python.instructions.md        # applyTo: "**/*.py"
-│   │   └── django.instructions.md        # applyTo: "**/views.py,**/models.py, ..."
+│   ├── instructions/                         # 言語・フレームワーク別ルール
+│   │   ├── python.instructions.md            # Python コード構成・命名・型・リソース管理
+│   │   ├── python-patterns.instructions.md   # テスト・パフォーマンス・アンチパターン
+│   │   ├── python-async.instructions.md      # 非同期・例外設計・バッチ処理
+│   │   ├── python-pandas.instructions.md     # pandas 大規模データ処理
+│   │   ├── python-openpyxl.instructions.md   # openpyxl 大規模 Excel 処理
+│   │   ├── python-logging.instructions.md    # ロギング・構造化ログ
+│   │   ├── python-configuration.instructions.md  # 設定管理・環境変数・シークレット
+│   │   ├── python-security.instructions.md   # セキュリティ・脆弱性防止
+│   │   ├── python-documentation.instructions.md  # ドキュメント生成・Sphinx
+│   │   ├── python-pyproject.instructions.md  # pyproject.toml・ツール構成
+│   │   ├── django.instructions.md            # モデル設計・クエリ最適化・ビュー・Signals
+│   │   ├── django-api.instructions.md        # DRF シリアライザー・認証・テスト
+│   │   ├── django-infra.instructions.md      # マイグレーション・API 設計
+│   │   └── django-celery.instructions.md     # Celery タスク設計・リトライ・冪等性
 │   │
-│   ├── skills/                           # プロセス・手順の知識（オンデマンド）
-│   │   ├── tdd/SKILL.md                  # テスト駆動開発の手順
-│   │   ├── code-review/SKILL.md          # PR レビューの手順
-│   │   ├── refactoring/SKILL.md          # リファクタリング手順
-│   │   └── debugging/SKILL.md            # デバッグ手順
+│   ├── skills/                               # プロセス・手順の知識（オンデマンド）
+│   │   ├── tdd/SKILL.md                      # テスト駆動開発の手順
+│   │   ├── code-review/SKILL.md              # PR レビューの手順
+│   │   ├── refactoring/SKILL.md              # リファクタリング手順
+│   │   └── debugging/SKILL.md                # デバッグ手順
 │   │
-│   └── workflows/                        # GitHub Actions
-│       └── ci.yml                        # ruff + pytest + カバレッジ
+│   └── workflows/                            # GitHub Actions
+│       └── ci.yml                            # ruff + pytest + カバレッジ
 │
-├── examples/                             # サンプルプロジェクト（実例）
-│   ├── python-pandas/                    # Python + pandas による CSV データ分析
+├── examples/                                 # サンプルプロジェクト（実例）
+│   ├── python-pandas/                        # Python + pandas による CSV データ分析
 │   │   ├── pyproject.toml
-│   │   ├── src/analyzer/                 # ソースコード
-│   │   └── tests/                        # テストコード
+│   │   ├── src/analyzer/                     # ソースコード
+│   │   └── tests/                            # テストコード
 │   │
-│   └── django-app/                       # Django によるタスク管理 API
+│   └── django-app/                           # Django によるタスク管理 API
 │       ├── pyproject.toml
 │       ├── manage.py
-│       ├── config/                       # Django 設定
-│       ├── tasks/                        # タスク管理アプリ
-│       └── tests/                        # テストコード
+│       ├── config/                           # Django 設定
+│       ├── tasks/                            # タスク管理アプリ
+│       └── tests/                            # テストコード
 │
-├── .claude/                              # 参考資料（Superpowers Skills 等）
+├── .claude/                                  # 参考資料（Superpowers Skills 等）
+│   └── references/                           # 収集したスキル・調査結果
+│
 └── README.md
 ```
 
@@ -100,10 +114,27 @@ cp -r .github/workflows/ <your-project>/.github/
 
 ### instructions/（言語・フレームワーク別）
 
-`applyTo` で対象ファイルを指定し、言語・フレームワーク固有のルールを適用：
+`applyTo` で対象ファイルを指定し、言語・フレームワーク固有のルールを適用（各4,000文字以内）：
 
-- **python.instructions.md** — pandas ベストプラクティス、型ヒント、インポート順序等
-- **django.instructions.md** — モデル設計、クエリ最適化、セキュリティ等
+**Python 共通:**
+- **python.instructions.md** — コード構成・命名・型・リソース管理
+- **python-patterns.instructions.md** — テスト・パフォーマンス・アンチパターン
+- **python-async.instructions.md** — 非同期・例外設計・バッチ処理
+- **python-logging.instructions.md** — ロギング・構造化ログ
+- **python-configuration.instructions.md** — 設定管理・環境変数・シークレット
+- **python-security.instructions.md** — セキュリティ・脆弱性防止
+- **python-documentation.instructions.md** — ドキュメント生成・Sphinx
+- **python-pyproject.instructions.md** — pyproject.toml・ツール構成
+
+**データ処理:**
+- **python-pandas.instructions.md** — pandas 大規模データ処理
+- **python-openpyxl.instructions.md** — openpyxl 大規模 Excel 処理
+
+**Django:**
+- **django.instructions.md** — モデル設計・クエリ最適化・ビュー・Signals
+- **django-api.instructions.md** — DRF シリアライザー・認証・テスト
+- **django-infra.instructions.md** — マイグレーション・API 設計
+- **django-celery.instructions.md** — Celery タスク設計・リトライ・冪等性
 
 ### skills/（プロセス・手順）
 
@@ -160,6 +191,8 @@ gh pr edit --add-reviewer @copilot
 | `coding-standards` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | コード品質原則（KISS, DRY, YAGNI）、コードスメル検出。共通ルールに反映 |
 | `django-expert` | [vintasoftware/django-ai-plugins](https://github.com/vintasoftware/django-ai-plugins) | 37 | Django コンサルティング企業 Vinta Software による総合ガイド。Django 規約の実践的知見に反映 |
 | `django-security` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | HTTPS/HSTS, Argon2, RBAC, XSS/SQLi 防止。セキュリティ規約に反映 |
+| `python-configuration` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | pydantic-settings、環境変数管理、シークレット。設定管理規約に反映 |
+| `django-celery-expert` | [vintasoftware/django-ai-plugins](https://github.com/vintasoftware/django-ai-plugins) | 37 | Celery タスク冪等性、リトライ戦略、Beat 設定。Celery 規約に反映 |
 
 ### Copilot Instructions 設計の参考
 
