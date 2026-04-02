@@ -33,26 +33,49 @@ class Article(models.Model):
 ```
 
 ## クエリ最適化
-- **N+1 問題の防止**:
-  - `ForeignKey` / `OneToOneField` → `select_related()`
-  - `ManyToManyField` / 逆参照 → `prefetch_related()`
-- 大規模データには `only()`, `defer()`, `iterator()` を使用する
-- 一括操作には `bulk_create()`, `bulk_update()`, `.update()` を使用する
-- カスタムマネージャーで共通クエリパターンを定義する
+
+- **N+1 問題の防止**（最重要）:
+  - `ForeignKey` / `OneToOneField` → `select_related()`（JOIN）
+  - `ManyToManyField` / 逆参照 → `prefetch_related()`（別クエリ）
+- 部分取得: `only()`, `defer()` で必要なフィールドのみ
+- 大規模イテレーション: `iterator()` でメモリ節約
+- 集約: `annotate()`, `aggregate()` でDB側計算
+- DB レベル操作: `F()` 式、`Q()` オブジェクト
 
 ```python
+from django.db.models import Count, Avg, F, Q
+
+# カスタムマネージャーで共通クエリを定義
 class ArticleManager(models.Manager):
     def published(self) -> QuerySet["Article"]:
         return self.filter(status="published").select_related("author")
 
-    def with_comments(self) -> QuerySet["Article"]:
-        return self.prefetch_related("comments")
+    def with_related(self) -> QuerySet["Article"]:
+        return self.select_related("author").prefetch_related("tags", "comments")
+
+# 集約・アノテーション
+Category.objects.annotate(article_count=Count("articles")).filter(article_count__gt=0)
+Product.objects.update(price=F("price") * 1.1)  # DB レベルで一括更新
+```
+
+### 一括操作（大量データ処理）
+
+```python
+# bulk_create: batch_size を指定して分割挿入
+Article.objects.bulk_create(articles, batch_size=1000)
+
+# bulk_update: 更新フィールドを明示
+Article.objects.bulk_update(articles, ["status", "updated_at"], batch_size=1000)
+
+# QuerySet.update(): 条件一括更新（最速）
+Article.objects.filter(status="draft").update(status="archived")
 ```
 
 ## ビュー
+
 - クラスベースビューを推奨する
 - ビジネスロジックはサービス層またはモデルメソッドに分離する
-- `ViewSet` の `get_queryset()` で `select_related` / `prefetch_related` を適用する
+- `get_queryset()` で `select_related` / `prefetch_related` を必ず適用
 
 ```python
 class ArticleViewSet(ModelViewSet):
@@ -60,9 +83,10 @@ class ArticleViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self) -> QuerySet[Article]:
-        return (
-            Article.objects.published()
-            .select_related("author")
-            .prefetch_related("tags")
-        )
+        return Article.objects.with_related()
+
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update"):
+            return ArticleWriteSerializer
+        return ArticleReadSerializer
 ```

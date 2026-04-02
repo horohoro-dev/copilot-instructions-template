@@ -79,6 +79,8 @@ def export_data(data: list[dict], format_str: str) -> bytes:
 ## リソース管理
 - `with` 文でファイル、DB接続、ロック等のリソースを管理する
 - 複数リソースや動的リソースには `ExitStack` を使用する
+- async リソースには `AsyncExitStack` を使用する
+- リソースの閉じ忘れは `read_only` モード等で特に注意
 
 ```python
 from contextlib import ExitStack
@@ -86,3 +88,11 @@ from contextlib import ExitStack
 with ExitStack() as stack:
     files = [stack.enter_context(open(f)) for f in file_paths]
 ```
+
+## 設計原則
+- **KISS**: 最もシンプルな解決策を選ぶ
+- **単一責任**: 1クラス/関数は1つの理由でのみ変更される
+- **継承よりコンポジション**: オブジェクト結合で振る舞いを構築
+- **Rule of Three**: 3回繰り返すまで抽象化しない
+- **関心の分離**: API層 → サービス層 → リポジトリ層
+- **依存性注入**: コンストラクタ注入でテスタビリティ確保

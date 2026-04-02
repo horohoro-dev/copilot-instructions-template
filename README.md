@@ -140,11 +140,38 @@ gh pr edit --add-reviewer @copilot
 
 > **注意:** Copilot Pro 以上のプランが必要（プレミアムリクエストを消費）。
 
-## 参考
+## 参考にしたスキル・リソース
 
-- [GitHub Copilot Instructions 公式ドキュメント](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-instructions-for-github-copilot)
-- [GitHub Copilot Code Review](https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review)
-- [Claude Code Superpowers プラグイン](https://github.com/jamiecurnow/superpowers) — TDD・デバッグ等のスキル設計の参考元
+### Claude Code / Copilot スキル
+
+| スキル名 | リポジトリ | スター数 | 内容・参考にした点 |
+|----------|-----------|---------|-------------------|
+| `python-performance-optimization` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | CPU/メモリプロファイリング、20+ 最適化パターン、NumPy ベクトル化。パフォーマンス指針に反映 |
+| `python-testing-patterns` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | pytest フィクスチャ・パラメータ化・プロパティベーステスト。テスト規約に反映 |
+| `python-design-patterns` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | KISS, SRP, コンポジション、Rule of Three。設計原則に反映 |
+| `python-anti-patterns` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | 14+ アンチパターン（散在リトライ、bare except、型安全性）。禁止事項に反映 |
+| `python-error-handling` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | Pydantic バリデーション、例外階層、バッチエラー追跡。エラーハンドリング規約に反映 |
+| `python-resource-management` | [wshobson/agents](https://github.com/wshobson/agents) | 32.8K | コンテキストマネージャー、ExitStack、ストリーミング。リソース管理規約に反映 |
+| `modern-python` | [trailofbits/modern-python-skills](https://github.com/trailofbits/modern-python-skills) | — | uv, ruff, ty 等のモダンツールチェーン。コードスタイル・ツール選定に反映 |
+| `django-expert` | [jeffallan/django-expert](https://github.com/jeffallan/django-expert) | — | Django 5.0 + DRF モデル設計、ORM 最適化、JWT 認証。Django 規約に反映 |
+| `python-patterns` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | Protocol, dataclass, DI パターン。Python コード構成に反映 |
+| `python-testing` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | pytest ベストプラクティス、hypothesis。テスト規約に反映 |
+| `backend-patterns` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | Repository パターン、N+1 防止、キャッシュ戦略。バックエンド設計に反映 |
+| `coding-standards` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | コード品質原則（KISS, DRY, YAGNI）、コードスメル検出。共通ルールに反映 |
+| `django-expert` | [vintasoftware/django-ai-plugins](https://github.com/vintasoftware/django-ai-plugins) | 37 | Django コンサルティング企業 Vinta Software による総合ガイド。Django 規約の実践的知見に反映 |
+| `django-security` | [affaan-m/everything-claude-code](https://github.com/AffaanM/everything-claude-code) | 131K | HTTPS/HSTS, Argon2, RBAC, XSS/SQLi 防止。セキュリティ規約に反映 |
+
+### Copilot Instructions 設計の参考
+
+| リソース | 参考にした点 |
+|----------|-------------|
+| [GitHub Copilot Instructions 公式ドキュメント](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-instructions-for-github-copilot) | Instructions / Skills の構成、applyTo パターン |
+| [GitHub Blog: Custom Instructions Tips](https://github.blog/ai-and-ml/github-copilot/5-tips-for-writing-better-custom-instructions-for-copilot/) | 最適サイズ（2,000文字以内）、簡潔さの重要性 |
+| [GitHub Copilot Code Review](https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review) | Code Review の 4,000文字制限 |
+| [Claude Code Superpowers](https://github.com/jamiecurnow/superpowers) | TDD・デバッグ等のスキル設計の参考元 |
+
+### ツール
+
 - [ruff](https://docs.astral.sh/ruff/) — Python フォーマッター / リンター
 - [uv](https://docs.astral.sh/uv/) — Python パッケージマネージャー
 - [pytest](https://docs.pytest.org/) — テストフレームワーク
