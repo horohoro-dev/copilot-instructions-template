@@ -29,8 +29,9 @@ copilot-instructions-template
 │   │   ├── python.instructions.md            # Python コード構成・命名・型・リソース管理
 │   │   ├── python-patterns.instructions.md   # テスト・パフォーマンス・アンチパターン
 │   │   ├── python-async.instructions.md      # 非同期・例外設計・バッチ処理
-│   │   ├── python-pandas.instructions.md     # pandas 大規模データ処理
-│   │   ├── python-openpyxl.instructions.md   # openpyxl 大規模 Excel 処理
+│   │   ├── python-pandas.instructions.md     # pandas コード品質・基本イディオム
+│   │   ├── python-pandas-performance.instructions.md  # pandas パフォーマンス・大規模データ
+│   │   ├── python-openpyxl.instructions.md   # openpyxl ベストプラクティス・Excel 操作
 │   │   ├── python-logging.instructions.md    # ロギング・構造化ログ
 │   │   ├── python-configuration.instructions.md  # 設定管理・環境変数・シークレット
 │   │   ├── python-security.instructions.md   # セキュリティ・脆弱性防止
@@ -127,8 +128,9 @@ cp -r .github/workflows/ <your-project>/.github/
 - **python-pyproject.instructions.md** — pyproject.toml・ツール構成
 
 **データ処理:**
-- **python-pandas.instructions.md** — pandas 大規模データ処理
-- **python-openpyxl.instructions.md** — openpyxl 大規模 Excel 処理
+- **python-pandas.instructions.md** — pandas コード品質・基本イディオム
+- **python-pandas-performance.instructions.md** — pandas パフォーマンス最適化・大規模データ処理
+- **python-openpyxl.instructions.md** — openpyxl ベストプラクティス・Excel 操作
 
 **Django:**
 - **django.instructions.md** — モデル設計・クエリ最適化・ビュー・Signals
